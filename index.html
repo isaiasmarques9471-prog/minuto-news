@@ -150,7 +150,9 @@ function getLocalPosts(){
 }
 
 function card(item, chip='Notícia'){
-  return `<a class="card" href="${item.link||'#'}" target="_blank" rel="noopener">
+  return `
+  <a class="card" href="${item.link||'#'}" target="_blank" rel="noopener">
+    <img src="${item.img}" style="width:100%;height:140px;object-fit:cover;">
     <div class="body">
       <div class="chip ${chip==='CEARÁ'?'ce':''}">${chip}</div>
       <h3 style="margin:8px 0">${item.title}</h3>
@@ -164,12 +166,31 @@ async function fetchRSS(q){
   const res = await fetch(url);
   const xml = await res.text();
   const doc = new DOMParser().parseFromString(xml, 'text/xml');
-  const items = [...doc.querySelectorAll('item')].slice(0, 12).map(it => ({
-    title: it.querySelector('title')?.textContent || '',
-    link: it.querySelector('link')?.textContent || '#',
-    pubDate: it.querySelector('pubDate')?.textContent || new Date().toUTCString(),
-    source: it.querySelector('source')?.textContent || ''
-  }));
+
+  const items = [...doc.querySelectorAll('item')].slice(0, 12).map(it => {
+    const title = it.querySelector('title')?.textContent || '';
+    const link = it.querySelector('link')?.textContent || '#';
+    const pubDate = it.querySelector('pubDate')?.textContent || new Date().toUTCString();
+    const source = it.querySelector('source')?.textContent || '';
+
+    // Tenta pegar imagem
+    let img = it.querySelector('media\\:content, enclosure')?.getAttribute('url');
+
+    // Busca fallback no description
+    if(!img){
+      const desc = it.querySelector('description')?.textContent || '';
+      const match = desc.match(/https?:\/\/[^"]+\.(jpg|jpeg|png|webp)/i);
+      if(match) img = match[0];
+    }
+
+    // fallback se não achar imagem
+    if(!img){
+      img = '/assets/fallback_fortaleza.svg';
+    }
+
+    return { title, link, pubDate, source, img };
+  });
+
   return items;
 }
 
@@ -179,6 +200,7 @@ async function loadCeara(){
   const items = await fetchRSS('Fortaleza OR "Ceará" OR Nordeste when:1d');
   ce.innerHTML = items.map(it => card(it, 'CEARÁ')).join('');
   if(items.length){
+    document.getElementById('heroImg').src = items[0].img;
     document.getElementById('heroTitle').textContent = items[0].title;
     document.getElementById('heroDesc').textContent = 'Cobertura especial do Ceará';
     document.getElementById('heroTime').textContent = 'Atualizado '+timeAgo(items[0].pubDate)+' atrás';
