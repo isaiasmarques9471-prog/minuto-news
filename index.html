@@ -1,1 +1,208 @@
-<h1>Minuto News - Vercel Build OK</h1>
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Minuto News — últimas notícias em tempo real</title>
+  <meta name="description" content="Minuto News — portal de Fortaleza e Ceará com cobertura Brasil e Mundo. Última hora, política, saúde e esportes.">
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <style>
+    :root { --bg:#0a0a0c; --text:#f3f3f6; --muted:#b7b9c0; --card:#15161a; --border:#262833; --red:#ff3232; --cyan:#00c8ff; }
+    [data-theme="light"] { --bg:#ffffff; --text:#0b0c0f; --muted:#40424a; --card:#ffffff; --border:#e7e9f0; }
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial}
+    .container{max-width:1200px;margin:0 auto;padding:16px}
+    header{position:sticky;top:0;z-index:20;background:rgba(10,10,12,.7);backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid var(--border)}
+    .top{display:flex;align-items:center;gap:12px;padding:10px 16px}
+    .logo{display:flex;align-items:center;gap:10px;font-weight:800}
+    .logo img{width:40px;height:40px}
+    .badge{font-size:12px;padding:3px 8px;border-radius:8px;border:1px solid var(--border);background:var(--card)}
+    nav{display:flex;gap:8px;flex-wrap:wrap}
+    .btn{padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-weight:700;cursor:pointer}
+    .btn.ghost{background:transparent}
+    .right{margin-left:auto;display:flex;gap:8px;align-items:center}
+    .search{position:relative}
+    .search input{padding:8px 12px 8px 34px;border-radius:10px;border:1px solid var(--border);background:#0f1014;color:var(--text)}
+    .search .icon{position:absolute;left:10px;top:7px;opacity:.6}
+    .toggle{border:1px solid var(--border);border-radius:10px;padding:8px 12px;cursor:pointer}
+    .ticker{border-top:1px solid var(--border);background:#0f0f13}
+    .row{display:flex;align-items:center;gap:12px;padding:8px 16px;overflow:hidden}
+    .marquee{white-space:nowrap;animation:scroll 30s linear infinite}
+    @keyframes scroll{from{transform:translateX(0)} to{transform:translateX(-50%)}}
+    .grid{display:grid;grid-template-columns:1fr;gap:16px}
+    @media(min-width:960px){.grid{grid-template-columns:2fr 1fr}}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+    .body{padding:16px}
+    .muted{color:var(--muted)}
+    .hero{display:grid;grid-template-columns:1fr}
+    @media(min-width:860px){.hero{grid-template-columns:1fr 1fr}}
+    .chip{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:12px}
+    .chip.ce{border-color:var(--cyan);color:var(--cyan)}
+    .primary{background:var(--red);color:#fff;font-weight:800;border:none;border-radius:10px;padding:10px 14px;cursor:pointer}
+    .list{display:grid;grid-template-columns:1fr;gap:12px}
+    @media(min-width:680px){.list{grid-template-columns:1fr 1fr}}
+    .section{margin-top:18px}
+    .title{display:flex;align-items:center;gap:8px;font-weight:900;margin:6px 0 10px}
+    .dot{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red)}
+    .dot.ce{background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
+    footer{border-top:1px solid var(--border);padding:24px 16px}
+  </style>
+</head>
+<body data-theme="dark">
+<header>
+  <div class="top container">
+    <div class="logo">
+      <img src="/assets/logo.svg" alt="Minuto News">
+      <div>
+        <div>Minuto <span style="color:var(--cyan)">News</span></div>
+        <div class="badge">Ao vivo</div>
+      </div>
+    </div>
+    <nav id="menu"></nav>
+    <div class="right">
+      <div class="search"><span class="icon">🔎</span><input id="q" placeholder="Buscar..."></div>
+      <button id="theme" class="toggle">🌓</button>
+    </div>
+  </div>
+  <div class="ticker">
+    <div class="row container">
+      <strong>🗞️ Última hora</strong>
+      <div class="marquee" id="ticker"></div>
+    </div>
+  </div>
+</header>
+
+<main class="container" style="padding-top:18px;">
+  <div class="grid">
+    <section>
+      <div class="card hero">
+        <div><img id="heroImg" src="/assets/fallback_fortaleza.svg" alt="Manchete"></div>
+        <div class="body">
+          <div class="chip" id="heroCat">Ceará Agora</div>
+          <h1 id="heroTitle">Minuto News — últimas notícias em tempo real</h1>
+          <p class="muted" id="heroDesc">Cobertura de Fortaleza, Ceará, Brasil e Mundo.</p>
+          <p class="muted" id="heroTime">Atualizado agora</p>
+          <button class="primary" id="heroBtn">Ler agora →</button>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="title"><span class="dot ce"></span> CEARÁ AGORA</div>
+        <div id="ceList" class="list"></div>
+      </div>
+
+      <div class="section">
+        <div class="title"><span class="dot"></span> Últimas</div>
+        <div id="latestList" class="list"></div>
+      </div>
+    </section>
+
+    <aside>
+      <div class="card"><div class="body">
+        <div class="title"><span class="dot"></span> Em alta</div>
+        <div id="trending"></div>
+      </div></div>
+
+      <div class="card" style="margin-top:12px;"><div class="body">
+        <div class="title"><span class="dot"></span> Newsletter</div>
+        <p class="muted">Receba alertas de última hora no seu e-mail.</p>
+        <form onsubmit="event.preventDefault(); alert('Inscrição registrada!'); this.reset();">
+          <input placeholder="seu@email">
+          <button class="primary" style="margin-top:10px;">Inscrever</button>
+        </form>
+      </div></div>
+    </aside>
+  </div>
+</main>
+
+<footer>
+  <div class="container" style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;">
+    <div style="display:flex;align-items:center;gap:8px;">
+      <img src="/assets/logo.svg" style="width:26px;height:26px" alt="logo">
+      <strong>Minuto News</strong>
+    </div>
+    <div class="muted">Edição: Equipe Minuto News • Fortaleza — CE • © <span id="year"></span></div>
+  </div>
+</footer>
+
+<script>
+const MENU = ["Última Hora","Fortaleza","Ceará","Brasil","Mundo","Saúde","Esportes"];
+const menuEl = document.getElementById('menu');
+MENU.forEach(m => {
+  const b = document.createElement('button');
+  b.className = "btn ghost";
+  b.textContent = m;
+  b.onclick = () => loadLatest(m);
+  menuEl.appendChild(b);
+});
+
+// Theme
+const state = { theme: 'dark' };
+function applyTheme(){ document.body.setAttribute('data-theme', state.theme); }
+document.getElementById('theme').addEventListener('click', ()=>{ state.theme = state.theme==='dark'?'light':'dark'; applyTheme() });
+applyTheme();
+
+function timeAgo(d){ const ts=new Date(d).getTime(); const diff=Date.now()-ts; const m=Math.floor(diff/60000);
+  if(m<1) return 'agora'; if(m<60) return m+' min'; const h=Math.floor(m/60); if(h<24) return h+' h'; return Math.floor(h/24)+' d'; }
+
+// Local posts (Admin) — read-only
+function getLocalPosts(){
+  try { return JSON.parse(localStorage.getItem('mn_posts')||'[]'); } catch(e){ return []; }
+}
+
+function card(item, chip='Notícia'){
+  return `<a class="card" href="${item.link||'#'}" target="_blank" rel="noopener">
+    <div class="body">
+      <div class="chip ${chip==='CEARÁ'?'ce':''}">${chip}</div>
+      <h3 style="margin:8px 0">${item.title}</h3>
+      <div class="muted">${timeAgo(item.pubDate||new Date())} • ${item.source||'Google News'}</div>
+    </div>
+  </a>`;
+}
+
+async function fetchRSS(q){
+  const url = '/api/rss?q='+encodeURIComponent(q);
+  const res = await fetch(url);
+  const xml = await res.text();
+  const doc = new DOMParser().parseFromString(xml, 'text/xml');
+  const items = [...doc.querySelectorAll('item')].slice(0, 12).map(it => ({
+    title: it.querySelector('title')?.textContent || '',
+    link: it.querySelector('link')?.textContent || '#',
+    pubDate: it.querySelector('pubDate')?.textContent || new Date().toUTCString(),
+    source: it.querySelector('source')?.textContent || ''
+  }));
+  return items;
+}
+
+async function loadCeara(){
+  const ce = document.getElementById('ceList');
+  ce.innerHTML = '<div class="muted">Carregando...</div>';
+  const items = await fetchRSS('Fortaleza OR "Ceará" OR Nordeste when:1d');
+  ce.innerHTML = items.map(it => card(it, 'CEARÁ')).join('');
+  if(items.length){
+    document.getElementById('heroTitle').textContent = items[0].title;
+    document.getElementById('heroDesc').textContent = 'Cobertura especial do Ceará';
+    document.getElementById('heroTime').textContent = 'Atualizado '+timeAgo(items[0].pubDate)+' atrás';
+    document.getElementById('heroBtn').onclick = () => window.open(items[0].link, '_blank');
+  }
+}
+
+async function loadLatest(category='Brasil'){
+  const list = document.getElementById('latestList');
+  list.innerHTML = '<div class="muted">Carregando...</div>';
+  const items = await fetchRSS(category+' when:2h');
+  const locals = getLocalPosts().map(p => ({ title:p.title, link:'#', pubDate:p.date||new Date(), source:'Minuto News' }));
+  const merged = locals.concat(items).slice(0, 12);
+  list.innerHTML = merged.map(it => card(it, category)).join('');
+  document.getElementById('trending').innerHTML = merged.slice(0,5).map(it => `• <a href="${it.link}" target="_blank">${it.title}</a>`).join('<br>');
+}
+
+async function loadTicker(){
+  const items = await fetchRSS('Brasil when:1h');
+  document.getElementById('ticker').innerHTML = items.concat(items).map(it => `<span style="margin:0 24px;">${it.title}</span>`).join('');
+}
+
+document.getElementById('year').textContent = new Date().getFullYear();
+loadCeara(); loadLatest('Brasil'); loadTicker();
+</script>
+</body>
+</html>
