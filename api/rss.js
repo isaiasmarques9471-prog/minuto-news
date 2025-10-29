@@ -5,15 +5,10 @@ export default async function handler(req, res) {
     const params = new URLSearchParams({ q, hl: "pt-BR", gl: "BR", ceid: "BR:pt-419" });
     const url = `${base}?${params.toString()}`;
 
-    const r = await fetch(url, {
-      headers: {
-        "User-Agent": "Mozilla/5.0"
-      }
-    });
-
+    const r = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
     const text = await r.text();
 
-    const blocked = [/sexo/i, /porn/i, /sensual/i, /nudez/i];
+    const blocked = [/sexo/i, /porn/i, /sensual/i, /nudez/i, /tabloide/i];
     let safe = text;
     if (blocked.some(rx => rx.test(text))) {
       safe = text.replace(/<item>[\s\S]*?<\/item>/gi, (m) => blocked.some(rx=>rx.test(m)) ? "" : m);
@@ -26,4 +21,3 @@ export default async function handler(req, res) {
     res.status(500).send("Erro RSS: " + e.message);
   }
 }
-
