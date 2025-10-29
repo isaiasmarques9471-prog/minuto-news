@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>Minuto News — Post</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml"/>
+  <style>
+    :root{--bg:#0a0a0c;--text:#f3f3f6;--muted:#b7b9c0;--card:#15161a;--border:#262833}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto}
+    .wrap{max-width:900px;margin:0 auto;padding:16px}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:16px}
+    .muted{color:var(--muted)}
+    a.btn{display:inline-block;padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:#20222b;color:#fff;text-decoration:none;margin-right:8px}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <p><a href="/" class="btn">← Voltar</a></p>
+  <div id="post" class="card">Carregando…</div>
+</div>
+<script>
+function getLocalPosts(){ try { return JSON.parse(localStorage.getItem('mn_posts')||'[]'); } catch(e){ return []; } }
+function q(k){ return new URLSearchParams(location.search).get(k) }
+const t = q('t') || '';
+const post = getLocalPosts().find(p => (p.title||'')===t);
+const el = document.getElementById('post');
+if(!post){ el.innerHTML = '<h1>Não encontrado</h1><p class="muted">Essa publicação não está disponível neste dispositivo.</p>'; }
+else{
+  el.innerHTML = `
+    <h1>${post.title}</h1>
+    <p class="muted">${post.category||''} • ${post.date||''}</p>
+    ${post.summary ? `<p>${post.summary}</p>`: ``}
+    ${post.body ? `<div style="white-space:pre-wrap;line-height:1.6">${post.body}</div>`: ``}
+    <div style="margin-top:16px">
+      <a class="btn" href="https://wa.me/?text=${encodeURIComponent(post.title+' — '+location.href)}" target="_blank">Compartilhar no WhatsApp</a>
+      <a class="btn" href="#" onclick="navigator.clipboard.writeText(location.href);alert('Link copiado!')">Copiar link</a>
+    </div>`;
+}
+</script>
+</body>
+</html>
