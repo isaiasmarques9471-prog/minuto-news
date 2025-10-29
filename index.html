@@ -7,8 +7,8 @@
   <meta name="description" content="Minuto News — portal de Fortaleza e Ceará com cobertura Brasil e Mundo. Última hora, política, saúde e esportes.">
   <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
   <style>
-    :root { --bg:#0a0a0c; --text:#f3f3f6; --muted:#b7b9c0; --card:#15161a; --border:#262833; --red:#ff3232; --cyan:#00c8ff; }
-    [data-theme="light"] { --bg:#ffffff; --text:#0b0c0f; --muted:#40424a; --card:#ffffff; --border:#e7e9f0; }
+    :root { --bg:#0a0a0c; --text:#f3f3f6; --muted:#b7b9c0; --card:#15161a; --border:#262833; --red:#ff3232; --cyan:#00c8ff; --shadow:rgba(0,0,0,.25); }
+    [data-theme="light"] { --bg:#ffffff; --text:#0b0c0f; --muted:#40424a; --card:#ffffff; --border:#e7e9f0; --shadow:rgba(0,0,0,.08);}
     *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,Cantarell,"Helvetica Neue",Arial}
     .container{max-width:1200px;margin:0 auto;padding:16px}
     header{position:sticky;top:0;z-index:20;background:rgba(10,10,12,.7);backdrop-filter:saturate(1.2) blur(8px);border-bottom:1px solid var(--border)}
@@ -17,20 +17,23 @@
     .logo img{width:40px;height:40px}
     .badge{font-size:12px;padding:3px 8px;border-radius:8px;border:1px solid var(--border);background:var(--card)}
     nav{display:flex;gap:8px;flex-wrap:wrap}
-    .btn{padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-weight:700;cursor:pointer}
+    .btn{padding:8px 12px;border:1px solid var(--border);border-radius:10px;background:var(--card);color:var(--text);font-weight:700;cursor:pointer;transition:.2s}
+    .btn:hover{transform:translateY(-1px)}
     .btn.ghost{background:transparent}
     .right{margin-left:auto;display:flex;gap:8px;align-items:center}
     .search{position:relative}
     .search input{padding:8px 12px 8px 34px;border-radius:10px;border:1px solid var(--border);background:#0f1014;color:var(--text)}
     .search .icon{position:absolute;left:10px;top:7px;opacity:.6}
     .toggle{border:1px solid var(--border);border-radius:10px;padding:8px 12px;cursor:pointer}
+    /* Weather badge */
+    .weather{display:flex;gap:8px;align-items:center;font-size:12px;border:1px solid var(--border);border-radius:10px;padding:6px 8px;background:var(--card)}
     .ticker{border-top:1px solid var(--border);background:#0f0f13}
     .row{display:flex;align-items:center;gap:12px;padding:8px 16px;overflow:hidden}
     .marquee{white-space:nowrap;animation:scroll 30s linear infinite}
     @keyframes scroll{from{transform:translateX(0)} to{transform:translateX(-50%)}}
     .grid{display:grid;grid-template-columns:1fr;gap:16px}
     @media(min-width:960px){.grid{grid-template-columns:2fr 1fr}}
-    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden}
+    .card{background:var(--card);border:1px solid var(--border);border-radius:16px;overflow:hidden;box-shadow:0 8px 24px var(--shadow)}
     .body{padding:16px}
     .muted{color:var(--muted)}
     .hero{display:grid;grid-template-columns:1fr}
@@ -38,13 +41,28 @@
     .chip{display:inline-block;border:1px solid var(--border);border-radius:999px;padding:3px 8px;font-size:12px}
     .chip.ce{border-color:var(--cyan);color:var(--cyan)}
     .primary{background:var(--red);color:#fff;font-weight:800;border:none;border-radius:10px;padding:10px 14px;cursor:pointer}
-    .list{display:grid;grid-template-columns:1fr;gap:12px}
-    @media(min-width:680px){.list{grid-template-columns:1fr 1fr}}
     .section{margin-top:18px}
     .title{display:flex;align-items:center;gap:8px;font-weight:900;margin:6px 0 10px}
     .dot{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 10px var(--red)}
     .dot.ce{background:var(--cyan);box-shadow:0 0 10px var(--cyan)}
     footer{border-top:1px solid var(--border);padding:24px 16px}
+    /* ---- Cards horizontais B1 (CNN style) ---- */
+    .hcard{display:grid;grid-template-columns:120px 1fr;gap:12px;padding:12px}
+    @media(min-width:680px){.hcard{grid-template-columns:160px 1fr}}
+    .hcard img{width:100%;height:100%;object-fit:cover;border-radius:12px}
+    .hcard:hover{background:linear-gradient(0deg,rgba(255,255,255,.02),rgba(255,255,255,.02))}
+    .hcard h3{margin:4px 0 6px 0}
+    .meta{font-size:12px;color:var(--muted)}
+    /* badges automáticos */
+    .badge-urgente{background:#ff3232;color:#fff;border-radius:8px;padding:2px 8px;margin-right:6px;font-size:12px}
+    .badge-alerta{background:#ffb020;color:#111;border-radius:8px;padding:2px 8px;margin-right:6px;font-size:12px}
+    .badge-destaque{background:#00c8ff;color:#111;border-radius:8px;padding:2px 8px;margin-right:6px;font-size:12px}
+    /* ---- Skeleton loaders ---- */
+    .skeleton{background:linear-gradient(90deg,#121317,#151720,#121317);animation:shine 1.2s linear infinite;background-size:200% 100%}
+    @keyframes shine{from{background-position:200% 0} to{background-position:-200% 0}}
+    .sk-card{border-radius:16px;border:1px solid var(--border);padding:12px}
+    .sk-thumb{height:100px;border-radius:12px}
+    .sk-line{height:10px;border-radius:6px;margin-top:10px}
   </style>
 </head>
 <body data-theme="dark">
@@ -59,6 +77,7 @@
     </div>
     <nav id="menu"></nav>
     <div class="right">
+      <div class="weather" id="weather">🌤️ Fortaleza — carregando…</div>
       <div class="search"><span class="icon">🔎</span><input id="q" placeholder="Buscar..."></div>
       <button id="theme" class="toggle">🌓</button>
     </div>
@@ -75,10 +94,13 @@
   <div class="grid">
     <section>
       <div class="card hero">
-        <div><img id="heroImg" src="/assets/fallback_fortaleza.svg" alt="Manchete"></div>
+        <div><img id="heroImg" src="/assets/fallback_fortaleza.svg" alt="Manchete" style="width:100%;height:100%;object-fit:cover"></div>
         <div class="body">
-          <div class="chip" id="heroCat">Ceará Agora</div>
-          <h1 id="heroTitle">Minuto News — últimas notícias em tempo real</h1>
+          <div>
+            <span class="badge-destaque" id="heroBadge" style="display:none"></span>
+            <span class="chip" id="heroCat">Ceará Agora</span>
+          </div>
+          <h1 id="heroTitle" style="margin:10px 0 6px 0">Minuto News — últimas notícias em tempo real</h1>
           <p class="muted" id="heroDesc">Cobertura de Fortaleza, Ceará, Brasil e Mundo.</p>
           <p class="muted" id="heroTime">Atualizado agora</p>
           <button class="primary" id="heroBtn">Ler agora →</button>
@@ -87,19 +109,27 @@
 
       <div class="section">
         <div class="title"><span class="dot ce"></span> CEARÁ AGORA</div>
-        <div id="ceList" class="list"></div>
+        <div id="ceList" class="list">
+          <!-- skeleton -->
+          <div class="sk-card skeleton"><div class="sk-thumb"></div><div class="sk-line"></div><div class="sk-line" style="width:70%"></div></div>
+          <div class="sk-card skeleton"><div class="sk-thumb"></div><div class="sk-line"></div><div class="sk-line" style="width:70%"></div></div>
+        </div>
       </div>
 
       <div class="section">
         <div class="title"><span class="dot"></span> Últimas</div>
-        <div id="latestList" class="list"></div>
+        <div id="latestList" class="list">
+          <!-- skeleton -->
+          <div class="sk-card skeleton"><div class="sk-thumb"></div><div class="sk-line"></div><div class="sk-line" style="width:70%"></div></div>
+          <div class="sk-card skeleton"><div class="sk-thumb"></div><div class="sk-line"></div><div class="sk-line" style="width:70%"></div></div>
+        </div>
       </div>
     </section>
 
     <aside>
       <div class="card"><div class="body">
         <div class="title"><span class="dot"></span> Em alta</div>
-        <div id="trending"></div>
+        <div id="trending">Carregando…</div>
       </div></div>
 
       <div class="card" style="margin-top:12px;"><div class="body">
@@ -135,28 +165,42 @@ MENU.forEach(m => {
   menuEl.appendChild(b);
 });
 
-// Theme
-const state = { theme: 'dark' };
-function applyTheme(){ document.body.setAttribute('data-theme', state.theme); }
+// Tema
+const state = { theme: (localStorage.getItem('mn_theme')||'dark') };
+function applyTheme(){ document.body.setAttribute('data-theme', state.theme); localStorage.setItem('mn_theme', state.theme); }
 document.getElementById('theme').addEventListener('click', ()=>{ state.theme = state.theme==='dark'?'light':'dark'; applyTheme() });
 applyTheme();
 
 function timeAgo(d){ const ts=new Date(d).getTime(); const diff=Date.now()-ts; const m=Math.floor(diff/60000);
   if(m<1) return 'agora'; if(m<60) return m+' min'; const h=Math.floor(m/60); if(h<24) return h+' h'; return Math.floor(h/24)+' d'; }
 
-// Local posts (Admin) — read-only
-function getLocalPosts(){
-  try { return JSON.parse(localStorage.getItem('mn_posts')||'[]'); } catch(e){ return []; }
+// Posts locais do Admin
+function getLocalPosts(){ try { return JSON.parse(localStorage.getItem('mn_posts')||'[]'); } catch(e){ return []; } }
+
+// Classificação para badges automáticas
+function classifyBadge(title){
+  const t = (title||'').toLowerCase();
+  if(/urgente|agora|explosão|desabamento|interdição|desastre|morreu|morta|assalto|polícia/.test(t)) return 'urgente';
+  if(/alerta|chuva|enchente|lotação|desabastecimento|trânsito/.test(t)) return 'alerta';
+  if(/exclusivo|entrevista|especial|análise/.test(t)) return 'destaque';
+  return null;
 }
 
-function card(item, chip='Notícia'){
+// Card horizontal (B1)
+function hcard(item, chip='Notícia'){
+  const badge = classifyBadge(item.title);
+  const badgeHtml = badge==='urgente' ? '<span class="badge-urgente">🔥 Urgente</span>' :
+                    badge==='alerta' ? '<span class="badge-alerta">⚠️ Alerta</span>' :
+                    badge==='destaque' ? '<span class="badge-destaque">🎯 Destaque</span>' : '';
   return `
-  <a class="card" href="${item.link||'#'}" target="_blank" rel="noopener">
-    <img src="${item.img}" style="width:100%;height:140px;object-fit:cover;">
-    <div class="body">
-      <div class="chip ${chip==='CEARÁ'?'ce':''}">${chip}</div>
-      <h3 style="margin:8px 0">${item.title}</h3>
-      <div class="muted">${timeAgo(item.pubDate||new Date())} • ${item.source||'Google News'}</div>
+  <a class="card" href="${item.link||'#'}" target="_blank" rel="noopener" onclick="trackClick('${chip}')">
+    <div class="hcard">
+      <img src="${item.img}" alt="">
+      <div>
+        <div style="display:flex;align-items:center;gap:8px">${badgeHtml}<span class="chip ${chip==='CEARÁ'?'ce':''}">${chip}</span></div>
+        <h3>${item.title}</h3>
+        <div class="meta">${timeAgo(item.pubDate||new Date())} • ${item.source||'Google News'}</div>
+      </div>
     </div>
   </a>`;
 }
@@ -166,65 +210,86 @@ async function fetchRSS(q){
   const res = await fetch(url);
   const xml = await res.text();
   const doc = new DOMParser().parseFromString(xml, 'text/xml');
-
   const items = [...doc.querySelectorAll('item')].slice(0, 12).map(it => {
     const title = it.querySelector('title')?.textContent || '';
     const link = it.querySelector('link')?.textContent || '#';
     const pubDate = it.querySelector('pubDate')?.textContent || new Date().toUTCString();
     const source = it.querySelector('source')?.textContent || '';
-
-    // Tenta pegar imagem
     let img = it.querySelector('media\\:content, enclosure')?.getAttribute('url');
-
-    // Busca fallback no description
     if(!img){
       const desc = it.querySelector('description')?.textContent || '';
       const match = desc.match(/https?:\/\/[^"]+\.(jpg|jpeg|png|webp)/i);
       if(match) img = match[0];
     }
-
-    // fallback se não achar imagem
-    if(!img){
-      img = '/assets/fallback_fortaleza.svg';
-    }
-
+    if(!img){ img = '/assets/fallback_fortaleza.svg'; }
     return { title, link, pubDate, source, img };
   });
-
   return items;
 }
 
+// Ceará Agora (preenche Hero)
 async function loadCeara(){
   const ce = document.getElementById('ceList');
-  ce.innerHTML = '<div class="muted">Carregando...</div>';
   const items = await fetchRSS('Fortaleza OR "Ceará" OR Nordeste when:1d');
-  ce.innerHTML = items.map(it => card(it, 'CEARÁ')).join('');
+  ce.innerHTML = items.map(it => hcard(it, 'CEARÁ')).join('');
   if(items.length){
     document.getElementById('heroImg').src = items[0].img;
     document.getElementById('heroTitle').textContent = items[0].title;
     document.getElementById('heroDesc').textContent = 'Cobertura especial do Ceará';
     document.getElementById('heroTime').textContent = 'Atualizado '+timeAgo(items[0].pubDate)+' atrás';
     document.getElementById('heroBtn').onclick = () => window.open(items[0].link, '_blank');
+    const b = classifyBadge(items[0].title);
+    const heroBadge = document.getElementById('heroBadge');
+    if(b==='urgente'){ heroBadge.textContent='🔥 Urgente'; heroBadge.style.display='inline-block'; }
+    else if(b==='alerta'){ heroBadge.textContent='⚠️ Alerta'; heroBadge.style.display='inline-block'; }
+    else if(b==='destaque'){ heroBadge.textContent='🎯 Destaque'; heroBadge.style.display='inline-block'; }
   }
 }
 
+// Últimas + Trendings + mistura com posts locais
 async function loadLatest(category='Brasil'){
   const list = document.getElementById('latestList');
-  list.innerHTML = '<div class="muted">Carregando...</div>';
+  list.innerHTML = '<div class="sk-card skeleton"><div class="sk-thumb"></div><div class="sk-line"></div><div class="sk-line" style="width:70%"></div></div>';
   const items = await fetchRSS(category+' when:2h');
-  const locals = getLocalPosts().map(p => ({ title:p.title, link:'#', pubDate:p.date||new Date(), source:'Minuto News' }));
+  const locals = getLocalPosts().map(p => ({ title:p.title, link:'/post/?t='+encodeURIComponent(p.title), pubDate:p.date||new Date(), source:'Minuto News', img:'/assets/fallback_fortaleza.svg' }));
   const merged = locals.concat(items).slice(0, 12);
-  list.innerHTML = merged.map(it => card(it, category)).join('');
-  document.getElementById('trending').innerHTML = merged.slice(0,5).map(it => `• <a href="${it.link}" target="_blank">${it.title}</a>`).join('<br>');
+  list.innerHTML = merged.map(it => hcard(it, category)).join('');
+  document.getElementById('trending').innerHTML = merged.slice(0,6).map(it => `• <a href="${it.link}" target="_blank" onclick="trackClick('Trending')">${it.title}</a>`).join('<br>');
+  trackImpression(category);
 }
 
+// Ticker
 async function loadTicker(){
   const items = await fetchRSS('Brasil when:1h');
   document.getElementById('ticker').innerHTML = items.concat(items).map(it => `<span style="margin:0 24px;">${it.title}</span>`).join('');
 }
 
+// Weather (Fortaleza) via serverless /api/weather (Open-Meteo, sem chave)
+async function loadWeather(){
+  try{
+    const r = await fetch('/api/weather');
+    const j = await r.json();
+    const w = document.getElementById('weather');
+    if(j && j.temp!=null){ w.textContent = `🌤️ Fortaleza ${j.temp}°C • ${j.desc} • vento ${j.wind} km/h`; }
+  }catch(e){ /* ignora */ }
+}
+
+// Analytics simples (localStorage)
+function trackImpression(cat){
+  try{
+    const a = JSON.parse(localStorage.getItem('mn_analytics')||'{}');
+    const hour = new Date().getHours();
+    a.categories = a.categories||{};
+    a.hours = a.hours||{};
+    a.categories[cat] = (a.categories[cat]||0)+1;
+    a.hours[hour] = (a.hours[hour]||0)+1;
+    localStorage.setItem('mn_analytics', JSON.stringify(a));
+  }catch(e){}
+}
+function trackClick(cat){ trackImpression(cat); }
+
 document.getElementById('year').textContent = new Date().getFullYear();
-loadCeara(); loadLatest('Brasil'); loadTicker();
+loadWeather(); loadCeara(); loadLatest('Brasil'); loadTicker();
 </script>
 </body>
 </html>
