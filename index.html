@@ -215,8 +215,30 @@ async function fetchRSS(q){
     const link = it.querySelector('link')?.textContent || '#';
     const pubDate = it.querySelector('pubDate')?.textContent || new Date().toUTCString();
     const source = it.querySelector('source')?.textContent || '';
-    let img = it.querySelector('media\\:content, enclosure')?.getAttribute('url');
-    if(!img){
+   let img = it.querySelector('media\\:content, enclosure')?.getAttribute('url');
+
+// tentativa nº2: achar <img> dentro do HTML
+if(!img){
+  const desc = it.querySelector('description')?.textContent || '';
+  const htmlMatch = desc.match(/<img[^>]+src="([^"]+)"/i);
+  if(htmlMatch) img = htmlMatch[1];
+}
+
+// tentativa nº3: achar links diretos jpg/png no description
+if(!img){
+  const desc = it.querySelector('description')?.textContent || '';
+  const match = desc.match(/https?:\/\/[^"]+\.(jpg|jpeg|png|webp)/i);
+  if(match) img = match[0];
+}
+
+// Fallback por categoria
+if(!img){
+  if(q.includes('Ceará') || q.includes('Fortaleza')) img = '/assets/fallback_fortaleza.svg';
+  else if(q.includes('Brasil')) img = '/assets/brasil.svg';
+  else if(q.includes('Mundo')) img = '/assets/mundo.svg';
+  else if(q.includes('Esporte')) img = '/assets/esportes.svg';
+  else img = '/assets/fallback_fortaleza.svg';
+}
       const desc = it.querySelector('description')?.textContent || '';
       const match = desc.match(/https?:\/\/[^"]+\.(jpg|jpeg|png|webp)/i);
       if(match) img = match[0];
