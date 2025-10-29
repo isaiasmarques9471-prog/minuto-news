@@ -29,7 +29,7 @@
     .weather{display:flex;gap:8px;align-items:center;font-size:12px;border:1px solid var(--border);border-radius:10px;padding:6px 8px;background:var(--card)}
     .ticker{border-top:1px solid var(--border);background:#0f0f13}
     .row{display:flex;align-items:center;gap:12px;padding:8px 16px;overflow:hidden}
-    .marquee{white-space:nowrap;animation:scroll 60s linear infinite}
+    .marquee{white-space:nowrap;animation:scroll 70s linear infinite}
     @keyframes scroll{from{transform:translateX(0)} to{transform:translateX(-50%)}}
     .grid{display:grid;grid-template-columns:1fr;gap:16px}
     @media(min-width:960px){.grid{grid-template-columns:2fr 1fr}}
@@ -156,7 +156,7 @@
 
 <script>
 const MENU = ["Última Hora","Fortaleza","Ceará","Brasil","Mundo","Saúde","Esportes"];
-const menuEl = document.getElementById('menu');
+const menuEl = document.getElementById('ticker').innerHTML = items.map(it => `<span ...`)
 MENU.forEach(m => {
   const b = document.createElement('button');
   b.className = "btn ghost";
