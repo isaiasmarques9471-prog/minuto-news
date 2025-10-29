@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Analytics — Minuto News</title>
+  <style>
+    :root{--bg:#0a0a0c;--text:#f3f3f6;--muted:#b7b9c0;--card:#15161a;--border:#262833}
+    body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,Segoe UI,Roboto}
+    .wrap{max-width:900px;margin:0 auto;padding:16px}
+    table{width:100%;border-collapse:collapse}
+    th,td{border-bottom:1px solid var(--border);padding:8px;text-align:left}
+    .muted{color:var(--muted)}
+    a{color:#00c8ff}
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <p><a href="/">← Voltar</a></p>
+  <h1>Analytics local</h1>
+  <p class="muted">Fonte: dados deste navegador (localStorage). Para dados globais, depois migramos para Supabase/Planetscale.</p>
+  <h3>Categorias mais vistas</h3>
+  <table id="cats"><tr><th>Categoria</th><th>Impressões</th></tr></table>
+  <h3>Horário de pico (0–23h)</h3>
+  <table id="hours"><tr><th>Hora</th><th>Impressões</th></tr></table>
+</div>
+<script>
+const a = JSON.parse(localStorage.getItem('mn_analytics')||'{}');
+function fill(id, obj){
+  const el = document.getElementById(id);
+  const rows = Object.entries(obj||{}).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<tr><td>${k}</td><td>${v}</td></tr>`).join('');
+  el.innerHTML = el.querySelector('tr').outerHTML + rows;
+}
+fill('cats', a.categories||{});
+fill('hours', a.hours||{});
+</script>
+</body>
+</html>
